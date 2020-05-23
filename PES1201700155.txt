@@ -1,0 +1,77 @@
+1. Introduction:
+
+	An intal is a non-negative integer of arbitrary length, but it is sufficient type to support up to 1000 decimal digits. The integer is stored as a null-terminated string of ASCII characters. 
+	We know that unlike Python, Java and C++, C cannot support operations on large numbers over a certain limit, unlike Big Integers library in other languages which support them.
+	The largest that C can store is "long long int", which can contain the [-9,223,372,036,854,775,807, +9,223,372,036,854,775,807] range (10^18 digits). So, if we want to perform some operation 			like: 2^1000, it needs a type which can store 302 digits, which is not possible in C. 
+	This is where my "intal" library comes to the rescue. 
+	The basic idea of my library is to store these huge numbers as a string, and to perform important operations like, addition, subtraction, multiplication, mod, power etc.
+	This is done in an efficient manner to return the result quickly. This library will come in handy when calculations have to be made on huge numbers efficiently.
+	
+2. Approach:
+
+	a)char *intal_add(char*,char*):
+		
+		Start from the second last index of both (as last contains '\0') the strings, add the numbers using ASCII logic, move the pointer of both the strings to the left by 1 and propagate the 			carry accordingly.
+	
+	b)char *intal_diff(char*,char*):
+		
+		Find the bigger number of the 2, subtract the smaller number from the bigger one using pen-paper logic. Start from the right end (exclude '\0') for both, check if bigger_number[i] >= 				smaller_number[i], if yes, subtract it using ASCII logic and move pointer to the left for both, else, add 10 to bigger_number[i] using ASCII logic and propagate the "borrow" while 				moving to the left.
+	
+	c)char *intal_compare(char*,char*):
+		
+		Firstly, compare the lengths of both the strings, and return 1,0 or -1 based on which one is longer. If they are of the same length, start traversal from the left side and move towards 			the right side while checking if string1[i]>string2[i] or vice-versa. When either of the conditions satisfy, return 1 or -1 accordingly. If the traversal is done, then return 0 as they 			are equal. 
+	
+	d)char *intal_multiply(char*,char*):
+		
+		The implementation is as follows: we have two intals (A,B) such that its lengths are L1 & L2 respectively, hence the product of these two numbers will be at most L1+L2. So, we take an 			empty intal "inter" of size 2*(L1+L2)+1 for '\0'. Now multiply index i of B with all the indices j of A. Add the product to value in res[k] where 0 <= i < L2, 0 <= j < L1, k = i + j. 				We repeat this until i = L2. Then for each i in range(0,L1+L2), we assign tmp = A[i] / 10, then A[i] = A[i] % 10 and finally A[i+1] = A[i+1] + tmp. Now reverse the array "inter", and 				this is stored into the final intal called "res" which is then returned as the final product. This concept is like pen-paper multiplication.
+	
+	e)char *intal_mod(char*,char *):
+		
+		Finding mod works on a logic (O(Log(A)) where when we have to find A % B, at each stage we update A = A - B, B = B * 2 and check if A<B. If so, we make B = initial(B) and continue with 			this process until the value of A is less than the intial value of B. The method uses optimises the above logic to reduce the number of subtractions. 
+	
+	f)char* intal_pow(const char*, unsigned int):
+		
+		To implement this, I have used the "Exponential Squaring" method which basically converts the powers into squares of powers and keeps reducing this to calculate the power in an 				effective manner. The code relies on the fact that: x^y == (x*x)^(y/2) 
+		The loop is doing exactly that: dividing the exponent by two while squaring the base.
+	
+	g)char* intal_gcd(const char* intal1, const char* intal2):
+		
+		Determining GCD is done using Euclid's Algorithm which is: GCD(x,y) = GCD(y,x%y). We use the function "intal_mod" internally to deduce the final mod result.
+	
+	h)char* intal_fibonacci(unsigned int):
+		
+		This uses the direct approach to finding the terms which is, we have a=0 & b=1, we then find c=a+b=1 and assign b to a and c to b, and continue with this process to find the required 				result.
+	
+	i)char* intal_bincoeff(unsigned int, unsigned int):
+		
+		Finding the binomial coefficient uses the concept of Pascal's identity which is, C(n,k) = C(n-1,k) + C(n-1,k-1). This is implemented using Dynamic Programming O(k).
+		I have also used the identity: C(n,k) = C(n,n-k) which is very useful. Eg: Finding out C(1000,900) can be changed to C(1000,100) which uses lesser space and time.
+	
+	j)int intal_max(char **, int):
+		
+		Traversing through the entire array and after assuming that the first element in the array is the highest, hence max=arr[0], and then checking if the latter elements are greater than 				the highest using "intal_compare" and assigning the appropriate value to max.
+	
+	k)int intal_min(char **, int):
+		
+		Traversing through the entire array and after assuming that the first element in the array is the lowest, hence min=arr[0], and then checking if the latter elements are lower than the 			lowest using "intal_compare" and assigning the appropriate value to min.
+	
+	l)int intal_search(char **, int, const char*):
+		
+		Traversing through the entire array searching for the required element to return the first occurrence's index or returning -1 if it does not exist.
+	
+	m)int intal_binsearch(char **arr, int n, const char* key):
+		
+		Implementation of this uses the typical "Binary Search" algorithm including duplicates, to find the first occurrence of the element to be searched. If found, we return the index, else, 			we return -1.
+	
+	n)void intal_sort(char **arr, int n):
+		
+		To sort in non-descending order, I have used "Merge Sort" algorithm to do this as it is time complexity for best, average, and worst case is O(nLogn). Whilst the worst case for "Quick 			Sort" is O(n^2) which might turn out to be very inefficient for huge intals.	
+	
+	o)char* coin_row_problem(char **, int):
+		
+		The logic to solve this problem depends on whether the i-1 th coin is considered or i-2 th coin is considered. Hence, we go on finding the best possible solution using the fact that:
+		best = max(i th coin + i-2 th best solution , i-1 th best solution). This is an O(1) algorithm.  
+
+3. Future Work:
+	
+	If I were given more time, I would have tried to optimize all the methods such that they are very efficient in terms of delivering the result quickly. Eg: Like using Karatsuba Algorithm for 			multiplication, extended Euclid’s algorithm for finding GCD etc.
