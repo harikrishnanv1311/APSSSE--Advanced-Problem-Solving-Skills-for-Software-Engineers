@@ -71,6 +71,11 @@
 		
 		The logic to solve this problem depends on whether the i-1 th coin is considered or i-2 th coin is considered. Hence, we go on finding the best possible solution using the fact that:
 		best = max(i th coin + i-2 th best solution , i-1 th best solution). This is an O(1) algorithm.  
+	
+	p)char* intal_factorial(unsigned int):
+	
+		Uses the basic factorial logic of incrementing counter from 1 to "number", multiplying it and storing the result with another intal which is returned in the end consecutively. 
+		Eg: intal_factorial(5) = 1*2*3*4*5
 
 3. Future Work:
 	
